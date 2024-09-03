@@ -41,8 +41,5 @@
     "testing": {
         "EPISODES": 10,
         "TARGET_RETURN": 4600
-    },
-    "BB": {
-        "EPISODES": 5
     }
 }

@@ -15,10 +15,7 @@ with open('./param.json', 'r') as f:
     params = json.load(f)
 
 
-# datasets = np.load('User_{}_RL_datasets.npz'.format(params['NumUE']))
-#datasets = np.load('../../../datasets_warehouse(done)/{}Mb/fixed_power/{}_RIS_action_space/User_{}_with_{}_RIS_complete_datasets.npz'.format(params['LocalDataSize'], params['RISActionSpace'], params['NumUE'], params['NumRISEle']))
 datasets = np.load('./User_{}_with_{}_RIS_complete_datasets.npz'.format(params['NumUE'], params['NumRISEle']))
-# datasets = np.load('User_{}_RL_datasets_recursive.npz'.format(params['NumUE']))
 
 loaded_H_U2B_Ric = datasets['H_U2B_Ric']
 loaded_H_R2B_Ric = datasets['H_R2B_Ric']
@@ -30,18 +27,7 @@ loaded_RTG = datasets['RTG']
 loaded_load_remaining = datasets['load_remaining']
 loaded_time_remaining = datasets['time_remaining']
 
-# print("loaded_H_U2B_Ric.shape: ", loaded_H_U2B_Ric.shape)
-# print("loaded_H_R2B_Ric.shape: ", loaded_H_R2B_Ric.shape)
-# print("loaded_H_U2R_Ric.shape: ", loaded_H_U2R_Ric.shape)
-# print("loaded_RefVector.shape: ", loaded_RefVector.shape)
-# print("loaded_power.shape: ", loaded_power.shape)
-# print("loaded_theta.shape: ", loaded_theta.shape)
-# print("loaded_RTG.shape: ", loaded_RTG.shape)
-# print("loaded_load_remaining.shape: ", loaded_load_remaining.shape)
-# print("loaded_time_remaining.shape: ", loaded_time_remaining.shape)
 
-# parser = argparse.ArgumentParser()
-# args = parser.parse_args()
 
 class CommunicationDataset(Dataset):
     def __init__(self, H_U2B_Ric, H_R2B_Ric, H_U2R_Ric, RefVector, power, theta, RTG, load_remaining, time_remaining, trasmission_length):
@@ -93,14 +79,11 @@ class CommunicationDataset(Dataset):
         power = torch.tensor(power_per_transmission, dtype=torch.long)
         theta = torch.tensor(phase_per_transmission, dtype=torch.long)
         action = torch.cat((power, theta), dim=1)
-        # action = power
         RTG = torch.tensor(RTG_per_transmission, dtype=torch.float32).unsqueeze(-1)
         return obss, action, RTG, torch.tensor([idx], dtype=torch.int64).unsqueeze(1)
-        # return obss, power, RTG, torch.tensor([idx], dtype=torch.int64).unsqueeze(1)
 
 
 
-# train_dataset = CommunicationDataset(loaded_H_U2B_Ric, loaded_H_R2B_Ric, loaded_H_U2R_Ric, loaded_power, loaded_RTG, loaded_load_remaining, loaded_time_remaining, 20)
 train_dataset = CommunicationDataset(loaded_H_U2B_Ric, loaded_H_R2B_Ric, loaded_H_U2R_Ric, loaded_RefVector, loaded_power, loaded_theta, loaded_RTG, loaded_load_remaining, loaded_time_remaining, 20)
 
 model_conf = GPTConfig(params['UserActionSpace'], params['RISActionSpace'], train_dataset.transmission_length*(1+1+params['NumUE']+params['NumRISEle']),

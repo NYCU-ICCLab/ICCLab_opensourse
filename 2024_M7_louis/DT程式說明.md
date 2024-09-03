@@ -56,5 +56,5 @@ title: Decision Transformer程式說明
 python3 Train_main.py
 ```
 看到下圖這樣的輸出就代表程式已經執行完成
-![image](https://hackmd.io/_uploads/B1XWP-430.png)
+![image](train_DT.png)
 

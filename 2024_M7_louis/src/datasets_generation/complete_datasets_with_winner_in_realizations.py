@@ -27,7 +27,6 @@ random.seed(seed)
 with open('./param.json', 'r') as f:
     params = json.load(f)
 
-        
 
 if __name__ == "__main__":
 
@@ -41,7 +40,6 @@ if __name__ == "__main__":
     rtg_History = []
     load_remaining_History = []
     time_remaining_History = []
-
 
     training_params = params['training']
     K_U2B = params['K_U2B']                                      # Rician factor: K-factor, if K = 0, Rician equal to Rayleigh 
@@ -64,37 +62,30 @@ if __name__ == "__main__":
     ArrayShape_RIS = [1, NumRISEle, 1]                                  # RIS is a ULA, which is placed along the direction [0, 1, 0] (i.e., y-axis)
     ArrayShape_UE  = [1, 1, 1]                                           # UE is with 1 antenna 
 
-    
 
-    violation_prob = 0.1
+
+    violation_prob = params['Violation_probability']           # violation probability: 0.1
     QoS_exponent = params['QoS_exponent']           # QoS exponent: 
-    BW = 100                                        # bandwidth = 100MHz 省略了10^6 不然在計算EC的log的時候會出問題(數值太小)
+    BW = params['Bandwidth']                                      # bandwidth = 100MHz 省略了10^6 不然在計算EC的log的時候會出問題(數值太小)
     noise = 10**(-104/10)                           # noise variance at UE # AWGN: -104dBm 
 
 
     # Environment
     MuMIMO_env = envMuMIMO(NumBSAnt, NumRISEle, NumUE)   
 
-    # Simulation Parameters
-    # EPISODES = 1
-    EPISODES = 1000
-    num_steps = 20        # each EPISODES has 20 steps
-    steps = EPISODES*num_steps
-    mini_batch_step = 1                             # freq to update policy network            
 
-    UE_power_selection = 4                          # [0, 3, 10, 200]  (mW)   
-    RIS_phase_selectoin = 5                         # [-135, -45, 0, 45, 135] (5 phase shifts)
+    EPISODES = 1000
+    num_steps = params["NUM_STEPS"]        # each EPISODES has 20 steps
+
+    UE_power_selection = params['UserActionSpace']                           # [0, 3, 10, 200]  (mW)   
+    RIS_phase_selectoin = params['RISActionSpace']                          # [-135, -45, 0, 45, 135] (5 phase shifts)
     LocalDataSize = params['LocalDataSize']         # 900 Mb = 900 * 10**6 bit 省略了10^6 
-    UE_initial_power = 3                            # UE power: 0~30dBm (0.001~1mW = 1mW~1000mW)
+    UE_initial_power = params['Initial_Power']                         # initial power of UE = 1mW                            
 
 
     # Training Parameters
     Penalty = LocalDataSize
     max_reward = 0
-
-
-    # RIS codebook, 
-   
 
     shiftable_angle = [-180, -135, -90, -45, 0, 45, 90, 135, 180]  # [0, 180, 90, -45, 180, 45, -90, 135]
 
@@ -105,7 +96,7 @@ if __name__ == "__main__":
     def convert_to_ids(vector, angle_to_id):
         return [angle_to_id[angle] for angle in vector]
 
-  
+
     print("shiftable_angle: ", shiftable_angle)
     shiftable_radian = np.radians(shiftable_angle)
     shiftable_complex = np.exp(1j * shiftable_radian)
@@ -149,18 +140,14 @@ if __name__ == "__main__":
         H_U2B_LoS, H_R2B_LoS, H_U2R_LoS = MuMIMO_env.H_GenLoS(Pos_BS, Pos_RIS, Pos_UE, ArrayShape_BS, ArrayShape_RIS, ArrayShape_UE)
         
 
-        
 
 
         for step in range(num_steps):
-            # print("step: ", step)
             H_U2B_NLoS, H_R2B_NLoS, H_U2R_NLoS = MuMIMO_env.H_GenNLoS()  
             # Overall channel with large-scale fading and small-scale fading (Rician fading)              
             H_U2B_Ric, H_R2B_Ric, H_U2R_Ric = MuMIMO_env.H_RicianOverall(K_U2B, K_R2B, K_U2R, 
                 H_U2B_LoS, H_R2B_LoS, H_U2R_LoS, H_U2B_NLoS, H_R2B_NLoS, H_U2R_NLoS, pathloss_U2B, pathloss_R2B, pathloss_U2R)
             
-            
-
             # power_ids = np.random.choice([1,1], (NumUE, num_channel_realization), replace=True)
             # power_ids = np.random.choice([1,2], (NumUE, num_channel_realization), replace=True)
             # power_ids = np.random.choice([1,2,3], (NumUE, num_channel_realization), replace=True)
@@ -211,11 +198,6 @@ if __name__ == "__main__":
                     Power_UE[power_id == 5] = 100  
                     Power_UE[power_id == 6] = 200
 
-
-                # RefVector[realization_id] *= shiftable_complex[phase_shiift_ids[:,realization_id]]
-                # RefVector[realization_id] = shiftable_complex[phase_shiift_ids[:,realization_id]]
-                # [-180, -135, -90, -45, 0, 45, 90, 135, 180]
-                # phase_shift_ids[:,realization_id] = [4,8,6,3,8,5,2,7]
                 if NumRISEle == 4:
                     RefVector[realization_id]= np.exp(1j * np.radians([0, -135, 90, -45]))
                 elif NumRISEle == 8:
@@ -226,12 +208,10 @@ if __name__ == "__main__":
                     RefVector[realization_id]= np.exp(1j * np.radians( [0, -180, 90, -45, -180, 45, -135,  180, 45,  -90,  135,  0, -90,  90, -45, 180,   45,  -90,  135,    0, -135,  135,  -45, -135, 45,  -90,  180,   45,  -90,  135,    0, -135]))
                 # print("shift ids: ", convert_to_ids(np.angle(RefVector[realization_id], deg=True), angle_to_id))
                 phase_shift_ids[:,realization_id] = convert_to_ids(np.angle(RefVector[realization_id], deg=True), angle_to_id)
-                # print("Power: ", Power_UE)
-                # print("Ref angle: ", np.angle(RefVector[realization_id], deg=True))
+
                 
 
                 H_Ric_overall = MuMIMO_env.H_Comb(H_U2B_Ric, H_R2B_Ric, H_U2R_Ric, RefVector[realization_id])          # Use the channel with adjusted phase
-
 
                 total_power_consumption[realization_id] += np.sum(Power_UE)
 
@@ -254,8 +234,6 @@ if __name__ == "__main__":
                     fail = np.zeros((NumUE))     
                     fail[UE_load[realization_id] > 0] = 1                                                                      # UE fail to transmit model will set to 1
                     if np.sum(fail) > violation_prob*NumUE:
-                        # print("Transmission failed")
-                        # print("UE_load: ", UE_load[id])
                         reward = -LocalDataSize*np.sum(fail) * np.sum(UE_load[realization_id]) / 0.05
                         rtg[realization_id] = reward
                     else:
@@ -272,17 +250,9 @@ if __name__ == "__main__":
 
         # find the top 3 realizations with respect to the rtg
         winner_realizations = np.argsort(rtg_history[:,-1])[:5]
-        # print("winner_realizations: ", winner_realizations)
-        # print("Survived rtg: ", rtg_history[winner_realizations])
-        
-        # print(rtg_history[winner_realizations][-1] > 0)
-        # print(np.sum(rtg_history[winner_realizations][-1] > 0))
+
         for winner in winner_realizations:
 
-            # print("Survived rtg: ", rtg_history[winner, -1])
-
-            # print("winner: ", winner)
-            # if rtg_history[winner][-1] > 0 and np.sum(load_remaining_history[winner][-1] <= 0) == 0:
             if rtg_history[winner][-1] > 0:
 
                 count += 1
@@ -296,7 +266,6 @@ if __name__ == "__main__":
                     H_U2R_Ric_history_winner = copy.deepcopy(H_U2R_Ric_history[winner])
                     RefVector_history_winner = copy.deepcopy(RefVector_history[winner])
                     power_history_winner = copy.deepcopy(power_history[winner])
-                    # print("Power History Winner: ", power_history_winner.shape)
                     phase_history_winner = copy.deepcopy(phase_history[winner])
                     rtg_history_winner = copy.deepcopy(rtg_history[winner])
                     load_remaining_history_winner = copy.deepcopy(load_remaining_history[winner])
@@ -314,11 +283,7 @@ if __name__ == "__main__":
     
     print("datasets size: ", len(power_History))
 
-
-
-    # np.savez('../../../datasets_warehouse/{}Mb/fixed_power/{}_RIS_action_space/User_{}_with_{}_RIS_complete_datasets.npz'.format(params['LocalDataSize'], params['RISActionSpace'],NumUE, NumRISEle),H_R2B_Ric=H_R2B_Ric_History, \
     np.savez('./User_{}_with_{}_RIS_complete_datasets.npz'.format(NumUE, NumRISEle),H_R2B_Ric=H_R2B_Ric_History, \
-    #np.savez('../../../datasets_warehouse(done)/{}Mb/fixed_power/{}_RIS_action_space/User_{}_with_{}_RIS_complete_datasets.npz'.format(params['LocalDataSize'], params['RISActionSpace'],NumUE, NumRISEle),H_R2B_Ric=H_R2B_Ric_History, \
                                                         H_U2B_Ric=H_U2B_Ric_History, \
                                                         H_U2R_Ric=H_U2R_Ric_History, \
                                                         RefVector=RefVector_History, \

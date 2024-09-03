@@ -13,12 +13,10 @@ import time
 from pyomo.environ import *
 import json
 
-import cvxpy as cvx
 
 with open('./param.json', 'r') as f:
     params = json.load(f)
 
-# BB(NumBSAnt, NumRISEle, NumUE, BW, total_steps, remaining_step, noise, load_remaining, D_max, H_U2B_Ric, H_R2B_Ric, H_U2R_Ric, initial_power, initial_theta, propagation_delay)
 def BB(NumBSAnt, NumRISEle, NumUE, Bandwidth, total_steps, remaining_step, sigma2, load_remaining, D_max, H_U2B_Ric, H_R2B_Ric, H_U2R_Ric, initial_power, initial_theta):
     
     P_max = 200
@@ -33,7 +31,6 @@ def BB(NumBSAnt, NumRISEle, NumUE, Bandwidth, total_steps, remaining_step, sigma
         flag_row += 1
     
     theta = 1e-2
-    violation_probability = 0.4
     #----------------------------------------------------Solver model-------------------------------------------------------------#
     
     def obj_function(model):  

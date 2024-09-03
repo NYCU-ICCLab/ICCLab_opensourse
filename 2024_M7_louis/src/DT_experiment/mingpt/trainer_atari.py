@@ -14,17 +14,14 @@ so nothing in this file really has anything to do with GPT specifically.
 """
 
 from datetime import datetime
-import cv2
 import math
 import torch
 import random
 import logging
-import atari_py
 import numpy as np
 from tqdm import tqdm
 from MuMIMOClass import *
 import torch.optim as optim
-from collections import deque
 from mingpt.utils import sample
 import matplotlib.pyplot as plt
 from torch.optim.lr_scheduler import LambdaLR
@@ -306,7 +303,7 @@ class Env():
         H_U2B_Ric = self.H_U2B_Ric.reshape(1, -1) # (single step, NumBSAnt*NumUE)
         H_R2B_Ric = self.H_R2B_Ric.reshape(1, -1) # (single step, NumBSAnt*NumRISEle)
         H_U2R_Ric = self.H_U2R_Ric.reshape(1, -1) # (single step, NumRISEle*NumUE)
-         
+
 
         channel_state = np.concatenate((H_U2B_Ric.real, H_U2B_Ric.imag), axis=1)
         channel_state = np.concatenate((channel_state, H_R2B_Ric.real), axis=1)
@@ -330,20 +327,12 @@ class Env():
 
         self.Power_UE[power_action == 0] = 0
         self.Power_UE[power_action == 1] = 3
-        # self.Power_UE[power_action == 2] = 4
         self.Power_UE[power_action == 2] = 10
         self.Power_UE[power_action == 3] = 200
-        # self.Power_UE[self.load_remaining[0] == 0] = 0
 
         
-        # self.RefVector *= self.shiftable_complex[phase_action]
         self.RefVector = self.shiftable_complex[phase_action]
-        # self.RefVector = np.exp(1j * np.radians([0, 180, 90, -45, 180, 45, -90, 135]))
 
-
-        # print("Power_UE: ", self.Power_UE)
-        # print("RefVector: ", np.angle(self.RefVector, deg=True))
-        # np.set_printoptions(suppress=True)
         
         if np.sum(self.Power_UE) == 0:
             EC = 0
@@ -358,10 +347,6 @@ class Env():
 
             EEE = EC * self.NumUE / np.sum(self.Power_UE)
 
-            # print("EEE: ", EEE)
-        # print("step: {}, EC: {:.2f}, power_consumption: {}".format(self.now_step, EC, np.sum(self.Power_UE)))       
-
-        # print("EC: ", EC)
         # Rician fading NLOS channel 
         self.H_U2B_NLoS, self.H_R2B_NLoS, self.H_U2R_NLoS = self.MuMIMO_env.H_GenNLoS()    
 
