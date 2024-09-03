@@ -19,7 +19,7 @@
     },
     "LocalDataSize": 880,
     "Violation_probability": 0.1,
-    "InitialPower": 3,
+    "Initial_Power": 3,
     "NumBsAnt": 4,
     "NumRISEle": 8,
     "NumUE": 10,
