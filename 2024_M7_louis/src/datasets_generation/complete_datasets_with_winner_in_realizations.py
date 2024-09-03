@@ -39,7 +39,6 @@ if __name__ == "__main__":
     load_remaining_History = []
     time_remaining_History = []
 
-    training_params = params['training']
     K_U2B = params['K_U2B']                                      # Rician factor: K-factor, if K = 0, Rician equal to Rayleigh 
     K_R2B = params['K_R2B']
     K_U2R = params['K_U2R']
