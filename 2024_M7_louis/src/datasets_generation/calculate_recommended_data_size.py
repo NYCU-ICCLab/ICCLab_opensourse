@@ -34,7 +34,7 @@ with open('./param.json', 'r') as f:
 
 if __name__ == "__main__":
     # Simulation Parameters
-    EPISODES = params['BB']["EPISODES"]
+    EPISODES = 5
     time_per_episode = 1                                   # update slow fading(pathloss)/UE position every 1s
     time_per_step = 0.05                                # update fast fading(rayleigh/rician fading) every 0.05s
     num_steps = params["NUM_STEPS"]   # each EPISODES has 20 steps
