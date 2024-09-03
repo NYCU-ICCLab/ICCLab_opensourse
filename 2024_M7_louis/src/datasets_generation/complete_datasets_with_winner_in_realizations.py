@@ -16,7 +16,6 @@ import copy
 import numpy as np
 from tqdm import tqdm
 from MuMIMOClass import *
-from memory_profiler import profile
 
 # set seed
 seed = 3
