@@ -33,4 +33,4 @@ Ex: cp User_10_with_8_RIS_complete_datasets.npz ../DT_experiment
 
 ##### Decision Transformer使用說明
 
-請看[Decisoin Transformer程式說明](DT程式說明)
+請看[Decisoin Transformer程式說明](DT程式說明.md)
