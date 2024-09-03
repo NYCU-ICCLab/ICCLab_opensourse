@@ -2,10 +2,10 @@
 
 ## 安裝環境
 
-環境所需檔案皆已包裝在[requirements.txt](./requirements.txt)當中
+環境所需檔案皆已包裝在[requirements.sh](./requirements.sh)當中
 
 ```shell!
-pip install requirements.txt
+shell sh ./requirements.sh
 ```
 
 ## 通訊環境建構
