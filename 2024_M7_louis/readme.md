@@ -6,6 +6,10 @@
 pip install requirements.txt
 ```
 
+## 通訊環境建構
+
+本研究使用之RIS通訊環境來自這一個[repo](https://github.com/WeiWang-WYS/IRSconfigurationDRL)
+
 ## Branch and Bound
 
 如果要使用Branch and Bound 程式要看[BB程式使用說明](BB程式說明.md)
@@ -18,6 +22,6 @@ pip install requirements.txt
 
 要了解資料集生成用程式，請看[生成資料集用程式說明](生成資料集用程式說明.md)
 
-### Decision Transformer生成說明
+### Decision Transformer使用說明
 
 請看[Decisoin Transformer程式說明](DT程式說明)
