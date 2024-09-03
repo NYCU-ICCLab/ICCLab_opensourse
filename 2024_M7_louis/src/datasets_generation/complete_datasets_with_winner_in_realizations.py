@@ -23,7 +23,6 @@ seed = 3
 np.random.seed(seed)
 random.seed(seed)
 
-
 with open('./param.json', 'r') as f:
     params = json.load(f)
 
@@ -62,17 +61,13 @@ if __name__ == "__main__":
     ArrayShape_RIS = [1, NumRISEle, 1]                                  # RIS is a ULA, which is placed along the direction [0, 1, 0] (i.e., y-axis)
     ArrayShape_UE  = [1, 1, 1]                                           # UE is with 1 antenna 
 
-
-
     violation_prob = params['Violation_probability']           # violation probability: 0.1
     QoS_exponent = params['QoS_exponent']           # QoS exponent: 
     BW = params['Bandwidth']                                      # bandwidth = 100MHz 省略了10^6 不然在計算EC的log的時候會出問題(數值太小)
     noise = 10**(-104/10)                           # noise variance at UE # AWGN: -104dBm 
 
-
     # Environment
     MuMIMO_env = envMuMIMO(NumBSAnt, NumRISEle, NumUE)   
-
 
     EPISODES = 1000
     num_steps = params["NUM_STEPS"]        # each EPISODES has 20 steps
@@ -81,7 +76,6 @@ if __name__ == "__main__":
     RIS_phase_selectoin = params['RISActionSpace']                          # [-135, -45, 0, 45, 135] (5 phase shifts)
     LocalDataSize = params['LocalDataSize']         # 900 Mb = 900 * 10**6 bit 省略了10^6 
     UE_initial_power = params['Initial_Power']                         # initial power of UE = 1mW                            
-
 
     # Training Parameters
     Penalty = LocalDataSize
@@ -96,11 +90,9 @@ if __name__ == "__main__":
     def convert_to_ids(vector, angle_to_id):
         return [angle_to_id[angle] for angle in vector]
 
-
     print("shiftable_angle: ", shiftable_angle)
     shiftable_radian = np.radians(shiftable_angle)
     shiftable_complex = np.exp(1j * shiftable_radian)
-
 
     # Initialization
     achievable_rate = np.zeros((1, NumUE))
@@ -140,15 +132,12 @@ if __name__ == "__main__":
         H_U2B_LoS, H_R2B_LoS, H_U2R_LoS = MuMIMO_env.H_GenLoS(Pos_BS, Pos_RIS, Pos_UE, ArrayShape_BS, ArrayShape_RIS, ArrayShape_UE)
         
 
-
-
         for step in range(num_steps):
             H_U2B_NLoS, H_R2B_NLoS, H_U2R_NLoS = MuMIMO_env.H_GenNLoS()  
             # Overall channel with large-scale fading and small-scale fading (Rician fading)              
             H_U2B_Ric, H_R2B_Ric, H_U2R_Ric = MuMIMO_env.H_RicianOverall(K_U2B, K_R2B, K_U2R, 
                 H_U2B_LoS, H_R2B_LoS, H_U2R_LoS, H_U2B_NLoS, H_R2B_NLoS, H_U2R_NLoS, pathloss_U2B, pathloss_R2B, pathloss_U2R)
             
-            # power_ids = np.random.choice([1,1], (NumUE, num_channel_realization), replace=True)
             # power_ids = np.random.choice([1,2], (NumUE, num_channel_realization), replace=True)
             # power_ids = np.random.choice([1,2,3], (NumUE, num_channel_realization), replace=True)
             if step / num_steps < 0.8:
@@ -167,7 +156,6 @@ if __name__ == "__main__":
                 H_U2B_Ric_history[realization_id][step] = H_U2B_Ric
                 H_U2R_Ric_history[realization_id][step] = H_U2R_Ric
                 RefVector_history[realization_id][step] = RefVector[realization_id]
-
 
                 power_id = power_ids[:,realization_id]
                 
