@@ -234,22 +234,22 @@ class Env():
         self.NumBSAnt = params['NumBsAnt']                   # M (BS antenna number)
         self.NumRISEle = params['NumRISEle']                 # L (RIS element number)
         self.NumUE = params['NumUE']                         # K (user number)
-        self.K_U2B = params['K_U2B']                                      # Rician factor: K-factor, if K = 0, Rician equal to Rayleigh 
+        self.K_U2B = params['K_U2B']                         # Rician factor: K-factor, if K = 0, Rician equal to Rayleigh 
         self.K_R2B = params['K_R2B']
         self.K_U2R = params['K_U2R']
-        self.BW = params['Bandwidth']                                        # bandwidth = 100MHz 省略了10^6 不然在計算EC的log的時候會出問題(數值太小)
+        self.BW = params['Bandwidth']                                        
         self.noise = 10**(-104/10)                           # noise variance at UE # AWGN: -104dBm 
-        self.LocalDataSize = params['LocalDataSize']         # 900 Mb = 900 * 10**6 bit 省略了10^6 
+        self.LocalDataSize = params['LocalDataSize']        
         self.QoS_exponent = params['QoS_exponent']          
 
         # Position of BS & RIS
         self.Pos_BS = np.array([0, 0, 10])       
         self.Pos_RIS = np.array([30, 10, 10])   
-        self.Pos_UE = np.zeros((self.NumUE, 3))       # Position of UE
+        self.Pos_UE = np.zeros((self.NumUE, 3))                             # Position of UE
         for i in range(self.NumUE):
             self.Pos_UE[i][0] = params['Position']['UE']['x']               # x = 50
             self.Pos_UE[i][1] = params['Position']['UE']['y']               # y = 50
-            self.Pos_UE[i][2] = params['Position']['UE']['z']                # z = 1   
+            self.Pos_UE[i][2] = params['Position']['UE']['z']               # z = 1   
 
         # transmit power of each UE 
         self.Power_UE = np.ones(self.NumUE)

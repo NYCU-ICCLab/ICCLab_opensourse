@@ -35,27 +35,26 @@ with open('./param.json', 'r') as f:
 if __name__ == "__main__":
     # Simulation Parameters
     EPISODES = 5
-    time_per_episode = 1                                   # update slow fading(pathloss)/UE position every 1s
-    time_per_step = 0.05                                # update fast fading(rayleigh/rician fading) every 0.05s
-    num_steps = params["NUM_STEPS"]   # each EPISODES has 20 steps
+    time_per_episode = 1                            # update slow fading(pathloss)/UE position every 1s
+    time_per_step = 0.05                            # update fast fading(rayleigh/rician fading) every 0.05s
+    num_steps = params["NUM_STEPS"]                 # each EPISODES has 20 steps
     NumBSAnt = params['NumBsAnt']                   # M (BS antenna number)
     NumRISEle = params['NumRISEle']                 # L (RIS element number)
     NumUE = params['NumUE']                         # K (user number)
-    UE_power_selection = params['UserActionSpace']                 # [0, 3, 10, 200]  (mW)   
-    power_space = UE_power_selection**NumUE         # action space of power selection (four power levels for each UE)
-    LocalDataSize = params['LocalDataSize']         # 900 Mb = 25 * 10**6 * 8 bit
-    BW = params['Bandwidth']                                           # bandwidth = 100MHz  把後面10^6都省略了 不然在計算EC的log的時候會出問題 哭阿
+    UE_power_selection = params['UserActionSpace']  # [0, 3, 10, 200]  (mW)   
+    LocalDataSize = params['LocalDataSize']         
+    BW = params['Bandwidth']                       
     noise = 10**(-104/10)                           # noise power = -104dBm = 10**(-104/10) mW
     UE_initial_power = params['Initial_Power']                        
 
-    K_U2B = params['K_U2B']                                 # Rician factor: K-factor, if K = 0, Rician equal to Rayleigh 
+    K_U2B = params['K_U2B']                         # Rician factor: K-factor, if K = 0, Rician equal to Rayleigh 
     K_R2B = params['K_R2B']                                 
     K_U2R = params['K_U2R'] 
     D_max = 1
 
     thetas = [1e-2, 1e-1, 1, 5, 10]
     # thetas = np.linspace(1e-2,10,10)
-    # theta = params['QoS_exponent']                  # QoS exponent
+    # theta = params['QoS_exponent']                 # QoS exponent
     
     # 參考通訊環境 paper 的位置
     Pos_BS = np.array([params['Position']['BS']['x'], params['Position']['BS']['y'], params['Position']['BS']['z']])       # Position of BS

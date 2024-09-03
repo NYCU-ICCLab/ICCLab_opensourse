@@ -4,12 +4,9 @@ import math
 import random
 import numpy as np
 from math import *
-import pandas as pd
 from tqdm import tqdm
 from BB_EEE import BB
 from MuMIMOClass import *
-import matplotlib.pyplot as plt
-from collections import namedtuple
 
 with open('./param.json', 'r') as f:
     params = json.load(f)
@@ -29,7 +26,7 @@ if __name__ == "__main__":
     NumUE = params['NumUE']                                 # K (user number)
     UE_power_selection = params['UserActionSpace']          # [0, 3, 10, 200]  (mW)   
     LocalDataSize = params['LocalDataSize']         
-    BW = params['Bandwidth']                                # bandwidth = 100MHz  把後面10^6都省略了 不然在計算EC的log的時候會出問題 哭阿
+    BW = params['Bandwidth']                                
     noise = 10**(-104/10)                                   # noise power = -104dBm = 10**(-104/10) mW
     UE_initial_power = params['Initial_Power']                        
 
@@ -75,8 +72,8 @@ if __name__ == "__main__":
     Pos_UE = np.zeros((NumUE, 3))       # Position of UE
     UE_mobility_range = 30
     for i in range(NumUE):
-        Pos_UE[i][0] = params['Position']['UE']['x'] + np.random.uniform(-UE_mobility_range, UE_mobility_range)            # x = 50
-        Pos_UE[i][1] = params['Position']['UE']['y'] + np.random.uniform(-UE_mobility_range, UE_mobility_range)              # y = 50
+        Pos_UE[i][0] = params['Position']['UE']['x']                #+ np.random.uniform(-UE_mobility_range, UE_mobility_range)            # x = 50
+        Pos_UE[i][1] = params['Position']['UE']['y']                #+ np.random.uniform(-UE_mobility_range, UE_mobility_range)              # y = 50
         Pos_UE[i][2] = params['Position']['UE']['z']                # z = 1     
 
     # distance between user and RIS + distance between RIS and BS
@@ -96,7 +93,6 @@ if __name__ == "__main__":
         load_remaining = LocalDataSize*np.ones(NumUE)
 
         while(step < num_steps):
-            # block = 0
             time_step = epi*num_steps + step
             
             # Rician fading NLOS channel 

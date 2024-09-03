@@ -64,12 +64,8 @@ def BB(NumBSAnt, NumRISEle, NumUE, Bandwidth, total_steps, remaining_step, sigma
     model = ConcreteModel(name="BB_EEE")
     
 
-    # model.power = Var([i_UE for i_UE in range(NumUE)], within=model.allowed_power)
-    # model.power = Var([i_UE for i_UE in range(NumUE)], bounds=(3,P_max), within=Reals, initialize = initial_power)
     model.power = Var([i_UE for i_UE in range(NumUE)], bounds=(3,P_max), within=Integers, initialize = initial_power)
     # model.power = Var([i_UE for i_UE in range(NumUE)], bounds=(P_max,P_max), within=Integers, initialize = P_max)
-    # model.theta_discrete = Var([i for i in range(NumRISEle)], bounds=(-(0.5*NumRISEle), (0.5*NumRISEle)), within=Reals, initialize = initial_theta)
-    # model.theta_discrete = Var([i for i in range(NumRISEle)], bounds=(-(0.5*NumRISEle), (0.5*NumRISEle)), within=Integers, initialize = initial_theta)
     model.theta_discrete = Var([i for i in range(NumRISEle)], bounds=(-(0.5*params['RISActionSpace'] - 1), (0.5*params['RISActionSpace'] - 1)), within=Integers, initialize = initial_theta)
     # model.theta_discrete = Var([i for i in range(NumRISEle)], bounds=(0, 0), within=Integers, initialize = initial_theta)
     #如果是 within=Integers的情況下

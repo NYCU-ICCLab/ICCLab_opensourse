@@ -39,46 +39,46 @@ if __name__ == "__main__":
     load_remaining_History = []
     time_remaining_History = []
 
-    K_U2B = params['K_U2B']                                      # Rician factor: K-factor, if K = 0, Rician equal to Rayleigh 
+    K_U2B = params['K_U2B']                                        # Rician factor: K-factor, if K = 0, Rician equal to Rayleigh 
     K_R2B = params['K_R2B']
     K_U2R = params['K_U2R']
 
-    NumBSAnt = params['NumBsAnt']                   # M (BS antenna number)
-    NumRISEle = params['NumRISEle']                 # L (RIS element number)
-    NumUE = params['NumUE']                         # K (user number)
+    NumBSAnt = params['NumBsAnt']                                  # M (BS antenna number)
+    NumRISEle = params['NumRISEle']                                # L (RIS element number)
+    NumUE = params['NumUE']                                        # K (user number)
     # Position of BS & RIS
     Pos_BS = np.array([0, 0, 10])       
     Pos_RIS = np.array([30, 10, 10])   
-    Pos_UE = np.zeros((NumUE, 3))       # Position of UE
+    Pos_UE = np.zeros((NumUE, 3))                                  # Position of UE
     for i in range(NumUE):
         Pos_UE[i][0] = params['Position']['UE']['x']               # x = 50
         Pos_UE[i][1] = params['Position']['UE']['y']               # y = 50
-        Pos_UE[i][2] = params['Position']['UE']['z']                # z = 1   
+        Pos_UE[i][2] = params['Position']['UE']['z']               # z = 1   
 
-    ArrayShape_BS  = [NumBSAnt, 1, 1]                                    # BS is equipped with a ULA that is placed along the direction [1, 0, 0] (i.e., x-axis)
-    ArrayShape_RIS = [1, NumRISEle, 1]                                  # RIS is a ULA, which is placed along the direction [0, 1, 0] (i.e., y-axis)
-    ArrayShape_UE  = [1, 1, 1]                                           # UE is with 1 antenna 
+    ArrayShape_BS  = [NumBSAnt, 1, 1]                              # BS is equipped with a ULA that is placed along the direction [1, 0, 0] (i.e., x-axis)
+    ArrayShape_RIS = [1, NumRISEle, 1]                             # RIS is a ULA, which is placed along the direction [0, 1, 0] (i.e., y-axis)
+    ArrayShape_UE  = [1, 1, 1]                                     # UE is with 1 antenna 
 
-    violation_prob = params['Violation_probability']           # violation probability: 0.1
-    QoS_exponent = params['QoS_exponent']           # QoS exponent: 
-    BW = params['Bandwidth']                                      # bandwidth = 100MHz 省略了10^6 不然在計算EC的log的時候會出問題(數值太小)
-    noise = 10**(-104/10)                           # noise variance at UE # AWGN: -104dBm 
+    violation_prob = params['Violation_probability']               # violation probability: 0.1
+    QoS_exponent = params['QoS_exponent']                          # QoS exponent: 
+    BW = params['Bandwidth']                                       
+    noise = 10**(-104/10)                                          # noise variance at UE # AWGN: -104dBm 
 
     # Environment
     MuMIMO_env = envMuMIMO(NumBSAnt, NumRISEle, NumUE)   
 
     EPISODES = 1000
-    num_steps = params["NUM_STEPS"]        # each EPISODES has 20 steps
+    num_steps = params["NUM_STEPS"]                                # each EPISODES has 20 steps
 
-    UE_power_selection = params['UserActionSpace']                           # [0, 3, 10, 200]  (mW)   
-    RIS_phase_selectoin = params['RISActionSpace']                          # [-135, -45, 0, 45, 135] (5 phase shifts)
-    LocalDataSize = params['LocalDataSize']         # 900 Mb = 900 * 10**6 bit 省略了10^6 
+    UE_power_selection = params['UserActionSpace']                 # [0, 3, 10, 200]  (mW)   
+    RIS_phase_selectoin = params['RISActionSpace']                 # [-135, -45, 0, 45, 135] (5 phase shifts)
+    LocalDataSize = params['LocalDataSize']         
 
     # Training Parameters
     Penalty = LocalDataSize
     max_reward = 0
 
-    shiftable_angle = [-180, -135, -90, -45, 0, 45, 90, 135, 180]  # [0, 180, 90, -45, 180, 45, -90, 135]
+    shiftable_angle = [-180, -135, -90, -45, 0, 45, 90, 135, 180] 
 
     # 創建一個字典來映射角度到 ID
     angle_to_id = {angle: idx for idx, angle in enumerate(shiftable_angle)}
