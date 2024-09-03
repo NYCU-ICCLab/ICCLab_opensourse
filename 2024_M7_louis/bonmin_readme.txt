@@ -4,9 +4,10 @@ https://coin-or.github.io/user_introduction.html#other-installation-methods
 
 docker pull coinor/coin-or-optimization-suite
 
-docker create -v 自己電腦裡面的位置:docker裡面的路徑 --name=自己取 -it coinor/coin-or-optimization-suite
-Ex: docker create -v /home/nycu813/ICCLab_opensourse/2024_M7_louis/src/BB:/root/BB --name=coin-or2 -it coinor/coin-or-optimization-suite
-*貼心小提醒:  docker當中的~ 會代表/root 所以如果在docker裡面你想要看到檔案是在~/你的資料夾  那你docker裡面的路徑 就要填/root/你的資料夾名稱
+docker create -v 自己電腦裡面的絕對路徑:docker裡面的路徑 --name=自己取 -it coinor/coin-or-optimization-suite
+Ex: docker create -v /home/nycu813/ICCLab_opensourse/2024_M7_louis/src/BB:/root/BB --name=coin-or -it coinor/coin-or-optimization-suite
+*貼心小提醒1:  terminal裡面打pwd可以看到自己的絕對路徑
+*貼心小提醒2:  docker當中的~ 會代表/root 所以如果在docker裡面你想要看到檔案是在~/你的資料夾  那你docker裡面的路徑 就要填/root/你的資料夾名稱
 
 docker start <上面--name的名字，不需要打--name>
 Ex: docker start coin-or
