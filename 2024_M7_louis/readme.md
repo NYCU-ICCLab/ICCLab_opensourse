@@ -2,6 +2,8 @@
 
 ## 安裝環境
 
+環境所需檔案皆已包裝在[requirements.txt](./requirements.txt)當中
+
 ```shell!
 pip install requirements.txt
 ```
