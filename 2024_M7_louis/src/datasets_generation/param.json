@@ -1,0 +1,48 @@
+{
+    "random_seed": 3,
+    "Position": {
+        "BS": {
+            "x": 0,
+            "y": 0,
+            "z": 10
+        },
+        "RIS": {
+            "x": 30,
+            "y": 10,
+            "z": 10
+        },
+        "UE": {
+            "x": 50,
+            "y": 0,
+            "z": 1
+        }
+    },
+    "LocalDataSize": 980,
+    "Violation_probability": 0.1,
+    "FixedPosition": true,
+    "NumBsAnt": 4,
+    "NumRISEle": 8,
+    "NumUE": 10,
+    "UserActionSpace": 4,
+    "RISActionSpace": 9,
+    "Initial_Power": 3, 
+    "Bandwidth": 100,
+    "NUM_STEPS": 20,
+    "K_U2B": 10,
+    "K_R2B": 10,
+    "K_U2R": 10,
+    "QoS_exponent": 1e-2,
+    "training": {
+        "EPISODES": 10000,
+        "LR": 1e-2,
+        "LR_decay": 2e-1,
+        "MEMORY_CAPACITY": 150000
+    },
+    "testing": {
+        "EPISODES": 10,
+        "TARGET_RETURN": 6500
+    },
+    "BB": {
+        "EPISODES": 5
+    }
+}
