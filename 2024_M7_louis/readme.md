@@ -5,7 +5,7 @@
 環境所需檔案皆已包裝在[requirements.sh](./requirements.sh)當中
 
 ```shell!
-shell sh ./requirements.sh
+sh ./requirements.sh
 ```
 
 ## 通訊環境建構
