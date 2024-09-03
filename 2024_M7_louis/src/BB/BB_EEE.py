@@ -29,10 +29,10 @@ def BB(NumBSAnt, NumRISEle, NumUE, Bandwidth, total_steps, remaining_step, sigma
             T_Conbime[idx_R2B_i][idx_RISEle] = H_R2B_Ric[int(idx_R2B_i/NumUE)][idx_RISEle]*H_U2R_Ric[idx_RISEle][(flag_row%NumUE)]
         
         flag_row += 1
-    
+
     theta = 1e-2
     #----------------------------------------------------Solver model-------------------------------------------------------------#
-    
+
     def obj_function(model):  
         EC = (-1 / theta) * log( ( sum(  exp( -1 * theta * Bandwidth * ( log( 1 + ((model.power[User_id]*RIS_square(model, User_id))/sigma2) )/log(2) ) ) for User_id in range(NumUE) ) / NumUE ) )
         return (EC*NumUE) / sum(model.power[User_id] for User_id in range(NumUE))
@@ -79,17 +79,11 @@ def BB(NumBSAnt, NumRISEle, NumUE, Bandwidth, total_steps, remaining_step, sigma
     # 分別是 -pi, -6/8*pi, -4/8*pi, -2/8*pi, 0, 2/8*pi, 4/8*pi, 6/8*pi, pi
     # 不過我們目前是用Reals，所以不用管這個
     
-
-    
     model.cons = ConstraintList()
     
-    # for idx_cons1 in range(NumUE):
-    #     model.cons.add(EC_constraints(model, idx_cons1))
     model.cons.add(EC_constraints(model))
-    # model.cons.add(SAA_constraints(model))
     
     model.obj = Objective(expr=obj_function, sense=maximize)  #-----------------setting objective function-------------------#
-
 
     solver_path = '/usr/bin/bonmin'
 
@@ -100,7 +94,6 @@ def BB(NumBSAnt, NumRISEle, NumUE, Bandwidth, total_steps, remaining_step, sigma
     
     opt.options['mu_strategy'] = 'adaptive'
     
-
     results = opt.solve(model, tee=False)
     # results = opt.solve(model, tee=True)
     # results.write()
@@ -112,17 +105,11 @@ def BB(NumBSAnt, NumRISEle, NumUE, Bandwidth, total_steps, remaining_step, sigma
     BB_objective = model.obj.expr()
     model_theta_BB = np.array(list(model.theta_discrete.get_values().values()))
     model_power_BB = np.array(list(model.power.get_values().values()))
-    # model.cons.display()
-
-    success_rate = 0
-
     RIS_matrx_multiply = H_R2B_Ric @ (np.diag(np.exp(1j*(2*ma.pi*model_theta_BB/(NumRISEle))))) @ H_U2R_Ric
     
     Total_link = H_U2B_Ric + RIS_matrx_multiply
     
     Diag_square = np.diag(Total_link.conj().T @ Total_link)    
-
     BB_time = results.solver.time
     return BB_status, BB_objective, model_power_BB, model_theta_BB, BB_time
-    return BB_status, BB_objective, model_power_BB, model_theta_BB, BB_time, success_rate
 

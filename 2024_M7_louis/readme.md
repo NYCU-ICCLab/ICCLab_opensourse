@@ -10,7 +10,6 @@ pip install requirements.txt
 
 如果要使用Branch and Bound 程式要看[BB程式使用說明](BB程式說明.md)
 
-
 ## Decision Transformer
 
 如果要使用Decision Transformer 程式 需要先了解**資料集生成用程式**，之後才可以開始使用Decision Transformer

@@ -18,7 +18,6 @@
         }
     },
     "LocalDataSize": 880,
-    "Violation_probability": 0.1,
     "NumBsAnt": 4,
     "NumRISEle": 8,
     "NumUE": 1,

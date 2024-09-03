@@ -1,19 +1,15 @@
+import time
 import json
 import math
-from math import *
+import random
 import numpy as np
+from math import *
 import pandas as pd
 from tqdm import tqdm
 from BB_EEE import BB
 from MuMIMOClass import *
 import matplotlib.pyplot as plt
 from collections import namedtuple
-
-
-import random
-import time
-
-
 
 with open('./param.json', 'r') as f:
     params = json.load(f)
@@ -35,25 +31,23 @@ if __name__ == "__main__":
     LocalDataSize = params['LocalDataSize']         
     BW = params['Bandwidth']                                # bandwidth = 100MHz  把後面10^6都省略了 不然在計算EC的log的時候會出問題 哭阿
     noise = 10**(-104/10)                                   # noise power = -104dBm = 10**(-104/10) mW
-    UE_initial_power = params['UE_initial_power']                        
+    UE_initial_power = params['Initial_Power']                        
 
     K_U2B = params['K_U2B']                                 # Rician factor: K-factor, if K = 0, Rician equal to Rayleigh 
     K_R2B = params['K_R2B']                                 
     K_U2R = params['K_U2R']                                 
     D_max = 1
     QoS_exponent = params['QoS_exponent']                   # QoS exponent
-    
-    
+
     # 參考通訊環境 paper 的位置
     Pos_BS = np.array([params['Position']['BS']['x'], params['Position']['BS']['y'], params['Position']['BS']['z']])       # Position of BS
     Pos_RIS = np.array([params['Position']['RIS']['x'], params['Position']['RIS']['y'], params['Position']['RIS']['z']])    # Position of RIS
-    
+
     # transmit power of each UE 
     Power_UE = np.ones(NumUE) * UE_initial_power           
-
     # Environment
     MuMIMO_env = envMuMIMO(NumBSAnt, NumRISEle, NumUE)          
-    
+
     # Others
     ArrayShape_BS = [NumBSAnt, 1, 1]    # BS is equipped with a ULA that is placed along the direction [1, 0, 0] (i.e., x-axis)
     ArrayShape_RIS = [1, NumRISEle, 1]  # IRS is a ULA, which is placed along the direction [0, 1, 0] (i.e., y-axis)
@@ -87,7 +81,7 @@ if __name__ == "__main__":
 
     # distance between user and RIS + distance between RIS and BS
     distance = np.linalg.norm(Pos_UE - Pos_RIS, axis=1) + np.linalg.norm(Pos_RIS - Pos_BS)
-    
+
     epi = 0
     #using while and tqdm to show the progress bar
     while(epi < EPISODES):
@@ -99,7 +93,6 @@ if __name__ == "__main__":
         
         # Each block update NLOS channel for Rician fading
         step = 0
-        # tqdm.write("Episode------ %d" % (epi))
         load_remaining = LocalDataSize*np.ones(NumUE)
 
         while(step < num_steps):
@@ -128,15 +121,12 @@ if __name__ == "__main__":
                 load_remaining[load_remaining < 0] = 0
 
                 step += 1
-                initial_power_offset = 0
             else:    # infeasible solution
                 EC = BB_obj_arr[step]*np.sum(power_BB) / NumUE # BB計算的是整個系統的EEE，我們要換成單一UE的所以除以NumUE
-
 
         rewards[epi] = sum(BB_obj_arr)
         epi += 1
     
-    # print("%e"%(sum(rewards)/len(rewards)))
     print("RIS elements:{}, avg_reward: {:.2f}".format(NumRISEle, sum(rewards) / len(rewards)) )
 
     print("Time use {:.2f}s".format((BB_timeTotal) / (EPISODES)))

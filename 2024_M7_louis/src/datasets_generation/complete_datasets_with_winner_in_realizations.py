@@ -75,7 +75,6 @@ if __name__ == "__main__":
     UE_power_selection = params['UserActionSpace']                           # [0, 3, 10, 200]  (mW)   
     RIS_phase_selectoin = params['RISActionSpace']                          # [-135, -45, 0, 45, 135] (5 phase shifts)
     LocalDataSize = params['LocalDataSize']         # 900 Mb = 900 * 10**6 bit 省略了10^6 
-    UE_initial_power = params['Initial_Power']                         # initial power of UE = 1mW                            
 
     # Training Parameters
     Penalty = LocalDataSize
@@ -197,8 +196,6 @@ if __name__ == "__main__":
                 # print("shift ids: ", convert_to_ids(np.angle(RefVector[realization_id], deg=True), angle_to_id))
                 phase_shift_ids[:,realization_id] = convert_to_ids(np.angle(RefVector[realization_id], deg=True), angle_to_id)
 
-                
-
                 H_Ric_overall = MuMIMO_env.H_Comb(H_U2B_Ric, H_R2B_Ric, H_U2R_Ric, RefVector[realization_id])          # Use the channel with adjusted phase
 
                 total_power_consumption[realization_id] += np.sum(Power_UE)
@@ -206,7 +203,6 @@ if __name__ == "__main__":
                 snr, achievable_rate, capacity, _ = MuMIMO_env.SNR_Throughput(H_Ric_overall, BW, noise, Power_UE)  
                 reward = 0
                 EC = -1 / QoS_exponent * np.log(np.mean(np.exp(-QoS_exponent * capacity)))
-                # print("EC: ", EC)
                 if EC == -0.0:
                     EC = 0   
                 if np.sum(Power_UE[0]) != 0:
@@ -232,7 +228,6 @@ if __name__ == "__main__":
                 rtg_history[realization_id][step] = rtg[realization_id]
                 load_remaining_history[realization_id][step] = UE_load[realization_id]
                 time_remaining_history[realization_id][step] = time_remaining[realization_id]
-                # print("load_remaining: ", UE_load[realization_id])
                 time_remaining[realization_id] -= 1
 
 
@@ -244,11 +239,9 @@ if __name__ == "__main__":
             if rtg_history[winner][-1] > 0:
 
                 count += 1
-                # print("Survived rtg:  ", rtg_history[winner][-1])
                 if np.sum(load_remaining_history[winner][-1]) > 0:
                     print("Survived remaining load: ", load_remaining_history[winner][-1])
                 else:
-                # print("Survived power: ", power_history[winner])
                     H_R2B_Ric_history_winner = copy.deepcopy(H_R2B_Ric_history[winner])
                     H_U2B_Ric_history_winner = copy.deepcopy(H_U2B_Ric_history[winner])
                     H_U2R_Ric_history_winner = copy.deepcopy(H_U2R_Ric_history[winner])
@@ -258,7 +251,6 @@ if __name__ == "__main__":
                     rtg_history_winner = copy.deepcopy(rtg_history[winner])
                     load_remaining_history_winner = copy.deepcopy(load_remaining_history[winner])
                     time_remaining_history_winner = copy.deepcopy(time_remaining_history[winner])
-
                     H_R2B_Ric_History.append(H_R2B_Ric_history_winner)
                     H_U2B_Ric_History.append(H_U2B_Ric_history_winner)
                     H_U2R_Ric_History.append(H_U2R_Ric_history_winner)
