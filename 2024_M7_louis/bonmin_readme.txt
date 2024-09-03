@@ -27,9 +27,9 @@ tar -zxvf 壓縮檔名.gz
 -----------------------------------需要安裝的套件---------------------------------------
 apt-get update
 apt-get install python3
-apt-get install python3-pip
-pip install numpy pandas matplotlib cvxpy pyomo==6.4.0
-pip install tqdm
+apt-get install python3-pip 
+pip install numpy pandas matplotlib cvxpy pyomo==6.4.0 tqdm 
+
 *上面這些步驟 請一個一個複製貼上，不能一次貼上全部*
 
 -----------------------------------如果需要刪掉container---------------------------------------
