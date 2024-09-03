@@ -24,6 +24,13 @@ sh ./requirements.sh
 
 要了解資料集生成用程式，請看[生成資料集用程式說明](生成資料集用程式說明.md)
 
+在資料集生成之後，記得要將資料集移到Decision Transformer的workspace底下才可以讓程式成功讀取
+
+```shell!
+datasets_generation$ cp <datasets名稱>.npz <DT workspace 路徑>
+Ex: cp User_10_with_8_RIS_complete_datasets.npz ../DT_experiment
+```
+
 ##### Decision Transformer使用說明
 
 請看[Decisoin Transformer程式說明](DT程式說明)
